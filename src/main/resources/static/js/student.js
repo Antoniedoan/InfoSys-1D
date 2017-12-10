@@ -13,6 +13,7 @@ $(document).ready(function () {
         $("#cancel-modal").modal('toggle', $(this));
     });
 
+    // Listener to get caller that invoked cancel modal
     var cancelModal = $("#cancel-modal");
     cancelModal.on('show.bs.modal', function (event) {
         var caller = event.relatedTarget;
@@ -20,9 +21,17 @@ $(document).ready(function () {
         cancelModalFooter.on("click", "#cancel", {caller: caller}, cancelModalBtnOnClick);
     });
 
-    // Table cell modal popup
+    // Book modal popup on table cell
     var calendar = $("#calendar");
     calendar.on("click", "table td", tableCellOnClick);
+
+    // Listener to get caller that invoker book modal
+    var bookModal = $("#book-modal");
+    bookModal.on('show.bs.modal', function (event) {
+        var caller = event.relatedTarget;
+        var bookModalFooter = cancelModal.find(".modal-footer");
+        bookModalFooter.on("click", "#book", {caller: caller}, bookModalBtnOnClick);
+    });
 
     // Hover on table cell changes its color and background if there's text in it
     calendar.on("mouseover", "table td", function () {
@@ -46,19 +55,6 @@ $(document).ready(function () {
     weekCalHeaderContainer.find(".prev").click(btnOnClick);
 });
 
-// Create radio button in modal
-function makeRadioButton(name, value, text) {
-    var label = document.createElement("label");
-    var radio = document.createElement("input");
-    radio.type = "radio";
-    radio.name = name;
-    radio.value = value;
-
-    label.append(radio);
-    label.append(" " + text);
-
-    return label;
-}
 
 // When a table cell is clicked, modal shows up if there's text
 function tableCellOnClick() {
@@ -74,16 +70,37 @@ function tableCellOnClick() {
                 radioHome.append(profRadioBtn);
                 radioHome.append("<br/>");
             } else {
-                console.log("ERROR: Can't get prof alias for " + fullName)
+                console.log("ERROR: Can't get prof alias.")
             }
         });
     }
 
     // Show modal if it has text
     if ($(this).text() !== "") {
-        $("#myModal").modal();
+        $("#myModal").modal('toggle', $(this));
     }
 }
+
+
+// Create radio button in modal
+function makeRadioButton(name, value, text) {
+    var label = document.createElement("label");
+    var radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = name;
+    radio.value = value;
+
+    label.append(radio);
+    label.append(" " + text);
+
+    return label;
+}
+
+
+function bookModalBtnOnClick(event) {
+    var caller = event.data.caller;
+}
+
 
 // Confirm cancel slot booking in modal
 function cancelModalBtnOnClick(event) {
@@ -124,6 +141,7 @@ function cancelModalBtnOnClick(event) {
         });
     }
 }
+
 
 // When course dropdown text is clicked, replace student calendar with the course
 function courseTextOnClick() {
@@ -166,6 +184,7 @@ function courseTextOnClick() {
     return courseId;
 }
 
+
 // When prof dropdown text is clicked, replace student calendar with prof
 function profTextOnClick() {
     var headerDate = $("#week-cal-header-date").text();
@@ -198,6 +217,7 @@ function profTextOnClick() {
     return profName;
 }
 
+
 // Next or previous calendar button
 function btnOnClick() {
     var weekCalHeaderDate = $("#week-cal-header-date");
@@ -210,8 +230,8 @@ function btnOnClick() {
     var weekCalHeaderWeek = $("#week-cal-header-week");
     var newWeek;
 
-    // If next, increment date
-    // Else, decrement date
+    // If next, increment date and week, else decrement
+    // Check for term dates as well
     if ($(this).is(".next")) {
         newStartDate = dateFormat(startDate, 7);
         newEndDate = dateFormat(endDate, 7);
@@ -265,10 +285,11 @@ function btnOnClick() {
     }
 }
 
+
 // Checking for specific term dates
 function checkTermDate(week, date, oneOrNegOne) {
-    startTermDates = ["10 Sep 2018", "22 Jan 2018", "14 May 2018"];
-    endTermDates = ["11 Dec 2017", "13 Aug 2018", "23 Apr 2018"];
+    const startTermDates = ["10 Sep 2018", "22 Jan 2018", "14 May 2018"];
+    const endTermDates = ["11 Dec 2017", "13 Aug 2018", "23 Apr 2018"];
     var output;
 
     if (week === "Vacation" && $.inArray(date, startTermDates) !== -1)
@@ -287,6 +308,7 @@ function checkTermDate(week, date, oneOrNegOne) {
     return output;
 }
 
+
 // Format the date so that its dd-MMM-yyyy
 function dateFormat(date, days) {
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -300,6 +322,7 @@ function dateFormat(date, days) {
 
     return (newDate[1] ? newDate : "0" + newDate[0]) + " " + newMonth + " " + newYear;
 }
+
 
 // Smooth scroll to anchor href
 function smoothScrollTo() {
@@ -327,6 +350,7 @@ function smoothScrollTo() {
             }
         });
 }
+
 
 // Show the snackbar for 3s
 function showSnackbar() {

@@ -23,8 +23,6 @@ public class WeekCalendarServiceImpl implements WeekCalendarService {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
 
-    // TODO: add studentId to week calendar methods (for viewing booked slots on calendar
-
     @Override
     public WeekCalendar getStudentCalendarByCourse(int studentId, String courseId,
                                                    LocalDate startDateOfSchoolTerm,

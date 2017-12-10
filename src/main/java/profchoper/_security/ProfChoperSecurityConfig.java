@@ -11,9 +11,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import javax.sql.DataSource;
 
-import static profchoper._misc.Constant.PROF;
-import static profchoper._misc.Constant.STUDENT;
-
 @Configuration
 public class ProfChoperSecurityConfig extends WebSecurityConfigurerAdapter {
 

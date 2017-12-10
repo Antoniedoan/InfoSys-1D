@@ -16,8 +16,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Collection;
 
-import static profchoper._misc.Constant.ROLE_PROF;
-import static profchoper._misc.Constant.ROLE_STUDENT;
+import static profchoper._config.Constant.ROLE_PROF;
+import static profchoper._config.Constant.ROLE_STUDENT;
 
 @Component
 public class ProfChoperAuthSuccessHandler implements AuthenticationSuccessHandler {

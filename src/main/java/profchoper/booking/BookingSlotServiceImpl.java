@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import profchoper.professor.Professor;
 import profchoper.professor.ProfessorService;
+import profchoper.student.Student;
+import profchoper.student.StudentService;
+import profchoper.user.User;
+import profchoper.user.UserService;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -12,15 +16,23 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static profchoper._misc.Constant.*;
+import static profchoper._config.Constant.*;
 
 @Service
 public class BookingSlotServiceImpl implements BookingSlotService {
-    @Autowired
-    private BookingSlotRepository slotRepository;
+    private final BookingSlotRepository slotRepository;
+    private final ProfessorService professorService;
+    private final StudentService studentService;
+    private final UserService userService;
 
     @Autowired
-    private ProfessorService professorService;
+    public BookingSlotServiceImpl(BookingSlotRepository slotRepository, ProfessorService professorService,
+                                  StudentService studentService, UserService userService) {
+        this.slotRepository = slotRepository;
+        this.professorService = professorService;
+        this.studentService = studentService;
+        this.userService = userService;
+    }
 
     @Override
     public List<BookingSlot> getAllSlots() {
@@ -28,57 +40,72 @@ public class BookingSlotServiceImpl implements BookingSlotService {
     }
 
     @Override
-    public boolean bookSlot(BookingSlot slot, int studentId) {
-        if (!slot.getBookStatus().equalsIgnoreCase(AVAIL)) return false;
+    public BookingSlot bookSlot(BookingSlot slot, String studentEmail) {
+        User user = userService.getUserByUsername(studentEmail);
+        if (!user.getRole().equalsIgnoreCase(ROLE_STUDENT)) return null;
+
+        Student student = studentService.getStudentByEmail(studentEmail);
+        if (!slot.getBookStatus().equalsIgnoreCase(AVAIL)) return null;
 
         slot.setBookStatus(PENDING);
-        slot.setStudentId(studentId);
+        slot.setStudentId(student.getId());
 
-        return slotRepository.update(slot);
+        if(!slotRepository.update(slot)) return null;
+        return slot;
     }
 
     @Override
-    public boolean cancelBookSlot(BookingSlot slot, int studentId) {
-        if (slot.getBookStatus().equalsIgnoreCase(AVAIL)
-                || slot.getStudentId() != studentId) return false;
+    public BookingSlot cancelBookSlot(BookingSlot slot, String studentEmail) {
+        User user = userService.getUserByUsername(studentEmail);
+        if (!user.getRole().equalsIgnoreCase(ROLE_STUDENT)) return null;
+
+        Student student = studentService.getStudentByEmail(studentEmail);
+        if (slot.getBookStatus().equalsIgnoreCase(AVAIL)) return null;
+        if (slot.getStudentId() != student.getId()) return null;
 
         slot.setBookStatus(AVAIL);
         slot.setStudentId(null);
 
-        return slotRepository.update(slot);
+        if(!slotRepository.update(slot)) return null;
+        return slot;
     }
 
     @Override
-    public boolean rejectBookSlot(BookingSlot slot, String profAlias) {
-        if (slot.getBookStatus().equalsIgnoreCase(AVAIL)
-                || !slot.getProfAlias().equalsIgnoreCase(profAlias)) return false;
+    public BookingSlot respondBookSlot(BookingSlot slot, String profEmail, boolean accept) {
+        User user = userService.getUserByUsername(profEmail);
+        if (!user.getRole().equalsIgnoreCase(ROLE_PROF)) return null;
 
-        slot.setBookStatus(AVAIL);
+        Professor prof = professorService.getProfessorByEmail(profEmail);
+        if (slot.getBookStatus().equalsIgnoreCase(AVAIL)) return null;
+        if (!slot.getProfAlias().equalsIgnoreCase(prof.getAlias())) return null;
 
-        return slotRepository.update(slot);
+        if (accept) slot.setBookStatus(BOOKED);
+        else slot.setBookStatus(REJECTED);
+
+        if(!slotRepository.update(slot)) return null;
+        return slot;
     }
 
     @Override
-    public boolean confirmBookSlot(BookingSlot slot, String profAlias) {
-        if (slot.getBookStatus().equalsIgnoreCase(AVAIL)
-                || !slot.getProfAlias().equals(profAlias.toLowerCase())) return false;
+    public BookingSlot addSlot(BookingSlot slot, String profEmail) {
+        User user = userService.getUserByUsername(profEmail);
+        if (!user.getRole().equalsIgnoreCase(ROLE_PROF)) return null;
 
-        slot.setBookStatus(BOOKED);
-
-        return slotRepository.update(slot);
+        if(!slotRepository.create(slot)) return null;
+        return slot;
     }
 
     @Override
-    public boolean addSlot(BookingSlot slot) {
-        return slotRepository.create(slot);
-    }
+    public BookingSlot deleteSlot(BookingSlot slot, String profEmail) {
+        User user = userService.getUserByUsername(profEmail);
+        if (!user.getRole().equalsIgnoreCase(ROLE_PROF)) return null;
 
-    @Override
-    public boolean deleteSlot(BookingSlot slot, String profAlias) {
-        if (!slot.getBookStatus().equalsIgnoreCase(AVAIL)
-                || !slot.getProfAlias().equals(profAlias.toLowerCase())) return false;
+        Professor prof = professorService.getProfessorByEmail(profEmail);
+        if (!slot.getBookStatus().equalsIgnoreCase(AVAIL)) return null;
+        if (!slot.getProfAlias().equalsIgnoreCase(prof.getAlias())) return null;
 
-        return slotRepository.delete(slot);
+        if(!slotRepository.delete(slot)) return null;
+        return slot;
     }
 
     @Override
@@ -150,6 +177,7 @@ public class BookingSlotServiceImpl implements BookingSlotService {
     @Override
     public List<BookingSlot> getSlotsByDateTime(LocalDateTime dateTime) {
         Timestamp timestamp = Timestamp.valueOf(dateTime);
+
         return slotRepository.findByDateTime(timestamp);
     }
 

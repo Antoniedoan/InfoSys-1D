@@ -1,4 +1,4 @@
-package profchoper._misc;
+package profchoper._config;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;

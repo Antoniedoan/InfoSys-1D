@@ -2,6 +2,7 @@ package profchoper.student;
 
 
 import profchoper.course.Course;
+import profchoper.user.User;
 
 import javax.persistence.*;
 import java.util.List;

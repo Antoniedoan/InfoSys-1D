@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static profchoper._misc.Constant.*;
+import static profchoper._config.Constant.*;
 
 @Service
 public class WeekCalendarServiceImpl implements WeekCalendarService {

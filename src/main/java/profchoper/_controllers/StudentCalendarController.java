@@ -1,4 +1,4 @@
-package profchoper._misc;
+package profchoper._controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -109,31 +109,31 @@ public class StudentCalendarController {
 
     @ResponseStatus(value = HttpStatus.OK)
     @PutMapping(value = "/student", params = {"action"})
-    public StudentCalendarResponse cancelSlot(@RequestBody BookingSlotJS slotJS, @RequestParam String
+    public CalendarResponse cancelSlot(@RequestBody BookingSlotJS slotJS, @RequestParam String
             action) {
+
         // String studentEmail = authFacade.getAuthentication().getName();
         String studentEmail = "eric@mymail.sutd.edu.sg";
-        Student student = studentService.getStudentByEmail(studentEmail);
 
         Timestamp time = Timestamp.valueOf(LocalDateTime.parse(slotJS.getTime(), DATE_TIME_FORMATTER));
         BookingSlot slot = new BookingSlot(slotJS.getProfAlias(), time);
 
         if (action.equalsIgnoreCase("book")) {
-            boolean isDone = bookingSlotService.bookSlot(slot, student.getId());
-            if (isDone)
-                return new StudentCalendarResponse("BOOK_DONE", slot);
+            BookingSlot returnedSlot = bookingSlotService.bookSlot(slot, studentEmail);
+            if (returnedSlot != null)
+                return new CalendarResponse("BOOK_DONE", returnedSlot);
             else
-                return new StudentCalendarResponse("BOOK_FAIL", slot);
+                return new CalendarResponse("BOOK_FAIL", slot);
 
         } else if (action.equalsIgnoreCase("cancel")) {
-            boolean isDone = bookingSlotService.cancelBookSlot(slot, student.getId());
-            if (isDone)
-                return new StudentCalendarResponse("CANCEL_DONE", slot);
+            BookingSlot returnedSlot = bookingSlotService.cancelBookSlot(slot, studentEmail);
+            if (returnedSlot != null)
+                return new CalendarResponse("CANCEL_DONE", returnedSlot);
             else
-                return new StudentCalendarResponse("CANCEL_FAIL", slot);
+                return new CalendarResponse("CANCEL_FAIL", slot);
         }
 
-        return new StudentCalendarResponse("ERROR", null);
+        return new CalendarResponse("ERROR", null);
     }
 
 }

@@ -12,17 +12,15 @@ public interface BookingSlotService {
 
     // Slot related methods
 
-    boolean bookSlot(BookingSlot slot, int studentId);
+    BookingSlot bookSlot(BookingSlot slot, String studentEmail);
 
-    boolean cancelBookSlot(BookingSlot slot, int studentId);
+    BookingSlot cancelBookSlot(BookingSlot slot, String studentEmail);
 
-    boolean rejectBookSlot(BookingSlot slot, String profAlias);
+    BookingSlot respondBookSlot(BookingSlot slot, String profEmail, boolean accept);
 
-    boolean confirmBookSlot(BookingSlot slot, String profAlias);
+    BookingSlot addSlot(BookingSlot slot, String profEmail);
 
-    boolean addSlot(BookingSlot slot);
-
-    boolean deleteSlot(BookingSlot slot, String profAlias);
+    BookingSlot deleteSlot(BookingSlot slot, String profEmail);
 
 
     // Date and Time related queries

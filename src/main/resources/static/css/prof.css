@@ -3,8 +3,11 @@
     src: url("https://fonts.gstatic.com/s/quicksand/v7/sKd0EMYPAh5PYCRKSryvW5Bw1xU1rKptJj_0jans920.woff2");
 }
 
-body {
+html, body {
     font-family: Quicksand, sans-serif;
+    height: 100%;
+    width: 100%;
+    font-size: 16px;
 }
 
 /* remove bullets */
@@ -41,11 +44,69 @@ ul {
     padding-top: 10px;
 }
 
-/*table header and data elements */
-.scheduler {
-    margin-bottom: 100px;
+#calendar {
+    width: 80%;
+    height: 60%;
+    margin: auto;
+    font-size: 18px;
+}
 
+/* Week header */
+#week-cal-header {
+    width: 100%;
+    height: 28%;
+    padding: 3% 5% 2% 5%;
+    background: darkgrey;
+    text-align: center;
+}
 
+#week-cal-header ul li {
+    color: white;
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+/* Previous button inside month header */
+#week-cal-header .prev {
+    left: 18%;
+    font-size: 40px;
+    position: absolute;
+    color: white;
+}
+
+/* Next button */
+#week-cal-header .next {
+    right: 18%;
+    font-size: 40px;
+    position: absolute;
+    color: white;
+}
+
+#week-cal-header .prev:hover, #week-cal-header .next:hover {
+    margin-left: -10px;
+    margin-top: -10px;
+    font-size: 60px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#week-cal-header .prev:active, #week-cal-header .next:active {
+    margin-left: -5px;
+    margin-top: -5px;
+    font-size: 50px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Week calendar table */
+#week-cal-table {
+    width: 100%;
+    height: 60%;
+    table-layout: fixed;
+    margin-bottom: 5%;
 }
 
 th, td {
@@ -53,10 +114,11 @@ th, td {
     text-align: center;
     border-collapse: collapse;
     outline: 1px solid #e3e3e3;
+    height: 55px;
 }
 
 td {
-    padding: 10px 10px;
+    padding: 10px;
 }
 
 th {
@@ -72,7 +134,11 @@ td:hover {
 }
 
 .page-header {
-    margin: 100px 20px 10px 20px;
+    margin: 140px 20px 10px 20px;
+}
+
+.page-header h1 {
+    font-size: 40px;
 }
 
 .h4 {
@@ -85,10 +151,30 @@ td:hover {
     margin-top: 20px;
 
 }
-.profName{
+
+.profName {
     color: lightskyblue;
     float: right;
 }
+
+/* Noticonfirm, pending and cancel hover */
+.notipending:hover .notibtn, .notipending:hover .notibtnbook {
+    display: inline-block;
+    overflow: auto;
+}
+
+.notipending:hover span, .noticancel:hover span {
+    display: inline-block;
+}
+
+.notipending:hover hr, .noticancel:hover hr {
+    display: block;
+}
+
+.notipending:hover .notimsg, .noticancel:hover .notimsg {
+    display: block;
+}
+
 /* Pending */
 .notipending {
     width: 90%;
@@ -103,8 +189,12 @@ td:hover {
 .notipending:hover {
     background: #4286f4;
     color: white;
-    font-size: 1.3em;
+    font-size: 22px;
     text-align: center;
+}
+
+.notipending:hover .notitext {
+    margin-left: -50px;
 }
 
 /* Cancelled */
@@ -121,24 +211,138 @@ td:hover {
 .noticancel:hover {
     background: #ed3b3b;
     color: white;
-    height: 16%;
-    font-size: 1.3em;
+    font-size: 22px;
     text-align: center;
 }
 
-.noticancel:hover .notibtnbook {
-    display: inline-block;
+.noticancel:hover .notitext {
+    margin-left: -50px;
+}
+
+/* General notification */
+hr {
+    display: none;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 20px 1em 0;
+    padding: 0;
+}
+
+.notistatus {
+    display: none;
+    float: left;
+}
+
+.notitext-container {
+    padding-top: 15px;
+    font-size: 1.2em;
+}
+
+.notibtnbook {
+    display: none;
+    position: absolute;
+    left: 78.5%;
     overflow: auto;
+    padding: auto;
+    margin: -7px 1.5% 0;
+    font-size: 18px;
 }
 
-.noticancel:hover span {
-    display: inline-block;
+.notibtn {
+    display: none;
+    position: absolute;
+    left: 85%;
+    overflow: auto;
+    padding: auto;
+    margin: -7px 1.5% 0;
+    font-size: 18px;
 }
 
-.noticancel:hover hr {
-    display: block;
+.notimsg {
+    display: none;
+    margin-left: 100px;
+    margin-right: 100px;
 }
 
-.noticancel:hover .notimsg {
-    display: block;
+/* No appointment text */
+#nonoti {
+    text-align: center;
+    color: #a3a3a3;
+}
+
+/* Make it so the text can't be selected */
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+/* Snackbar */
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }

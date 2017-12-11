@@ -58,9 +58,11 @@ ul {
 }
 
 .studentID {
-    float: right;
-    color: green;
-    margin-left: 95px;
+    font-size: 20px;
+    position: absolute;
+    right: 120px;
+    color: lightblue;
+    margin-top: 25px;
     overflow: hidden;
 }
 
@@ -404,7 +406,7 @@ hr {
     user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
-/* */
+/* Snackbar */
 #snackbar {
     visibility: hidden;
     min-width: 250px;

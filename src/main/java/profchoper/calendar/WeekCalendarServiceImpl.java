@@ -93,12 +93,15 @@ public class WeekCalendarServiceImpl implements WeekCalendarService {
                     outputBld = new StringBuilder();
                     String appendedStr = "BOOKED\n(" + slot.getProfAlias().toUpperCase() + ")  ";
                     outputBld.append(appendedStr);
+                    break;
 
                 } else if (slot.getBookStatus().equalsIgnoreCase(PENDING)
                         && slot.getStudentId() == studentId) {
                     outputBld = new StringBuilder();
                     String appendedStr = "PENDING\n(" + slot.getProfAlias().toUpperCase() + ")  ";
                     outputBld.append(appendedStr);
+                    break;
+
                 } else {
                     outputBld.append(slot.getProfAlias().toUpperCase());
                     outputBld.append(", ");

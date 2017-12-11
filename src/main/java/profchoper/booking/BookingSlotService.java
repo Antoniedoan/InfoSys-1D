@@ -1,6 +1,7 @@
 package profchoper.booking;
 
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,4 +52,6 @@ public interface BookingSlotService {
     List<BookingSlot> getSlotsByCourseAndSWeek(String courseId, LocalDate startDateOfSchoolWeek);
 
     List<BookingSlot> getSlotsByStudentAndSWeek(int studentId, LocalDate startDateOfSchoolWeek);
+
+    BookingSlot getSlotByProfAndDateTime(String profAlias, Timestamp startTime);
 }

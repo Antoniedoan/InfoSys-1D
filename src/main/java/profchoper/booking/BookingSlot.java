@@ -47,7 +47,7 @@ public class BookingSlot {
 
     @Override
     public String toString() {
-        return getDayWeekYear(getDate()) + " : " + getStartTime() + " to " + getEndTime()
+        return getDayWeekYear(getDate()) + " - " + getStartTime() + " to " + getEndTime()
                 + " with Prof. " + getProfAlias().toUpperCase();
     }
 

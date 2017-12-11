@@ -50,7 +50,7 @@ public class BookingSlotServiceImpl implements BookingSlotService {
         slot.setBookStatus(PENDING);
         slot.setStudentId(student.getId());
 
-        if(!slotRepository.update(slot)) return null;
+        if (!slotRepository.update(slot)) return null;
         return slot;
     }
 
@@ -63,10 +63,9 @@ public class BookingSlotServiceImpl implements BookingSlotService {
         if (slot.getBookStatus().equalsIgnoreCase(AVAIL)) return null;
         if (slot.getStudentId() != student.getId()) return null;
 
-        slot.setBookStatus(AVAIL);
-        slot.setStudentId(null);
+        slot.setBookStatus(CANCELLED);
 
-        if(!slotRepository.update(slot)) return null;
+        if (!slotRepository.update(slot)) return null;
         return slot;
     }
 
@@ -82,7 +81,7 @@ public class BookingSlotServiceImpl implements BookingSlotService {
         if (accept) slot.setBookStatus(BOOKED);
         else slot.setBookStatus(REJECTED);
 
-        if(!slotRepository.update(slot)) return null;
+        if (!slotRepository.update(slot)) return null;
         return slot;
     }
 
@@ -91,7 +90,7 @@ public class BookingSlotServiceImpl implements BookingSlotService {
         User user = userService.getUserByUsername(profEmail);
         if (!user.getRole().equalsIgnoreCase(ROLE_PROF)) return null;
 
-        if(!slotRepository.create(slot)) return null;
+        if (!slotRepository.create(slot)) return null;
         return slot;
     }
 
@@ -104,7 +103,7 @@ public class BookingSlotServiceImpl implements BookingSlotService {
         if (!slot.getBookStatus().equalsIgnoreCase(AVAIL)) return null;
         if (!slot.getProfAlias().equalsIgnoreCase(prof.getAlias())) return null;
 
-        if(!slotRepository.delete(slot)) return null;
+        if (!slotRepository.delete(slot)) return null;
         return slot;
     }
 
@@ -152,10 +151,17 @@ public class BookingSlotServiceImpl implements BookingSlotService {
 
         for (BookingSlot slot : studentSlots) {
             if (!(slot.getDate().isBefore(startDateOfSchoolWeek)
-                    || slot.getDate().isAfter(endDateOfSchoolWeek))) output.add(slot);
+                    || slot.getDate().isAfter(endDateOfSchoolWeek)))
+
+                if (!slot.getBookStatus().equalsIgnoreCase(CANCELLED)) output.add(slot);
         }
 
         return output;
+    }
+
+    @Override
+    public BookingSlot getSlotByProfAndDateTime(String profAlias, Timestamp startTime) {
+        return slotRepository.findByProfAndDateTime(profAlias, startTime);
     }
 
     @Override

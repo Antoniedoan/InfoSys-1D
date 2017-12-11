@@ -34,7 +34,7 @@ public class StudentCalendarController {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
     private static final DateTimeFormatter DATE_TIME_FORMATTER
-            = DateTimeFormatter.ofPattern("dd/MM/yy - HH:mm");
+            = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm");
 
     @Autowired
     public StudentCalendarController(WeekCalendarService weekCalendarService, StudentService studentService,
@@ -107,16 +107,29 @@ public class StudentCalendarController {
         return "fragments/student_cal";
     }
 
-    @ResponseStatus(value = HttpStatus.OK)
+    @GetMapping(value = "/student/noti", params = {"date"})
+    public String getStudentNotifications(@RequestParam String date, Model model) {
+        String studentEmail = "eric@mymail.sutd.edu.sg";
+        // String studentEmail = authFacade.getAuthentication().getName();
+        Student student = studentService.getStudentByEmail(studentEmail);
+        LocalDate startDateOfSchoolWeek = LocalDate.parse(date, DATE_FORMATTER);
+
+        List<BookingSlot> studentBookings
+                = bookingSlotService.getSlotsByStudentAndSWeek(student.getId(), startDateOfSchoolWeek);
+
+        model.addAttribute("bookings", studentBookings);
+        return "fragments/student_noti";
+    }
+
     @PutMapping(value = "/student", params = {"action"})
-    public CalendarResponse cancelSlot(@RequestBody BookingSlotJS slotJS, @RequestParam String
+    public @ResponseBody CalendarResponse cancelSlot(@RequestBody BookingSlotJS slotJS, @RequestParam String
             action) {
 
         // String studentEmail = authFacade.getAuthentication().getName();
         String studentEmail = "eric@mymail.sutd.edu.sg";
 
         Timestamp time = Timestamp.valueOf(LocalDateTime.parse(slotJS.getTime(), DATE_TIME_FORMATTER));
-        BookingSlot slot = new BookingSlot(slotJS.getProfAlias(), time);
+        BookingSlot slot = bookingSlotService.getSlotByProfAndDateTime(slotJS.getProfAlias(), time);
 
         if (action.equalsIgnoreCase("book")) {
             BookingSlot returnedSlot = bookingSlotService.bookSlot(slot, studentEmail);

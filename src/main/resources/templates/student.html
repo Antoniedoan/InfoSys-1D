@@ -54,14 +54,16 @@
             <div class="modal-body">
                 <div style="font-size: 18px; margin-bottom: 8px">
                     Booking slot on
-                    <span id="book-date">dd-MMM-yyyy</span>
+                    <span id="book-date">dd/MM/yy HH:mm</span>
                      with...
                 </div>
                 <div id="radio-home"></div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="book" data-dismiss="modal">Confirm</button>
+                <span id="book-alert" style="font-size: 15px; margin-right: 10px; color: red;">
+                    Please select a prof. before submitting.</span>
+                <button type="button" class="btn btn-default" id="book">Confirm</button>
             </div>
         </div>
     </div>

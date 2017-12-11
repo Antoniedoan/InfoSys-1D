@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.List;
 
 @Repository
@@ -50,6 +51,13 @@ public class BookingSlotRepository {
                 new BookingSlotRowMapper());
     }
 
+    public BookingSlot findByProfAndDateTime(String profAlias, Timestamp startTimestamp) {
+        String selectSQL = "SELECT * FROM bookings WHERE professor_alias = ? AND start_time = ?";
+
+        return (BookingSlot) jdbcTemplate.queryForObject(selectSQL,
+                new Object[]{profAlias, startTimestamp}, new BookingSlotRowMapper());
+    }
+
 
     // JdbcTemplate returns 1 if success, 0 if failure
     public boolean create(BookingSlot slot) {
@@ -67,7 +75,7 @@ public class BookingSlotRepository {
         String profAlias = slot.getProfAlias();
         Timestamp startTimestamp = slot.getTimestamp();
         String bookStatus = slot.getBookStatus();
-        int studentId = slot.getStudentId();
+        Integer studentId = slot.getStudentId();
 
         String updateSQL = "UPDATE bookings SET book_status = ?, student_id = ? " +
                 "WHERE professor_alias = ? AND start_time = ?";

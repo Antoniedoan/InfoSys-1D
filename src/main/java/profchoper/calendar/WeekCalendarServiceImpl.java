@@ -28,7 +28,8 @@ public class WeekCalendarServiceImpl implements WeekCalendarService {
                                                    LocalDate startDateOfSchoolTerm,
                                                    LocalDate startDateOfSchoolWeek) {
 
-        List<List<String>> matrix = createStudentCourseCalMatrix(courseId, startDateOfSchoolWeek);
+        List<List<String>> matrix
+                = createStudentCourseCalMatrix(courseId, studentId, startDateOfSchoolWeek);
 
         return new WeekCalendar(startDateOfSchoolTerm, startDateOfSchoolWeek, matrix);
     }
@@ -38,7 +39,8 @@ public class WeekCalendarServiceImpl implements WeekCalendarService {
                                                  LocalDate startDateOfSchoolTerm,
                                                  LocalDate startDateOfSchoolWeek) {
 
-        List<List<String>> matrix = createStudentProfCalMatrix(profAlias, startDateOfSchoolWeek, studentId);
+        List<List<String>> matrix
+                = createStudentProfCalMatrix(profAlias, startDateOfSchoolWeek, studentId);
 
         return new WeekCalendar(startDateOfSchoolTerm, startDateOfSchoolWeek, matrix);
     }
@@ -46,13 +48,15 @@ public class WeekCalendarServiceImpl implements WeekCalendarService {
     @Override
     public WeekCalendar getProfCalendar(String profAlias, LocalDate startDateOfSchoolTerm,
                                         LocalDate startDateOfSchoolWeek) {
-        List<List<String>> matrix = createProfCalMatrix(profAlias, startDateOfSchoolWeek);
+
+        List<List<String>> matrix
+                = createProfCalMatrix(profAlias, startDateOfSchoolWeek);
 
         return new WeekCalendar(startDateOfSchoolTerm, startDateOfSchoolWeek, matrix);
     }
 
 
-    private List<List<String>> createStudentCourseCalMatrix(String courseId,
+    private List<List<String>> createStudentCourseCalMatrix(String courseId, int studentId,
                                                             LocalDate startDateOfSchoolWeek) {
         List<BookingSlot> slotList = slotService.getSlotsByCourseAndSWeek(courseId, startDateOfSchoolWeek);
         List<List<String>> output = new ArrayList<>();
@@ -69,7 +73,7 @@ public class WeekCalendarServiceImpl implements WeekCalendarService {
                 LocalDate datePart = startDateOfSchoolWeek.plus(j, ChronoUnit.DAYS);
                 LocalDateTime dateTime = LocalDateTime.of(datePart, timePart);
 
-                temp.add(createStudentCourseCalString(dateTime, slotList));
+                temp.add(createStudentCourseCalString(dateTime, slotList, studentId));
             }
 
             output.add(temp);
@@ -78,13 +82,28 @@ public class WeekCalendarServiceImpl implements WeekCalendarService {
         return output;
     }
 
-    private String createStudentCourseCalString(LocalDateTime dateTime, List<BookingSlot> slotList) {
+    private String createStudentCourseCalString(LocalDateTime dateTime, List<BookingSlot> slotList,
+                                                int studentId) {
         StringBuilder outputBld = new StringBuilder();
 
         for (BookingSlot slot : slotList) {
-            if (slot.getDateTime().equals(dateTime) && slot.getBookStatus().equalsIgnoreCase(AVAIL)) {
-                outputBld.append(slot.getProfAlias().toUpperCase());
-                outputBld.append(", ");
+            if (slot.getDateTime().equals(dateTime)) {
+                if (slot.getBookStatus().equalsIgnoreCase(AVAIL)) {
+                    outputBld.append(slot.getProfAlias().toUpperCase());
+                    outputBld.append(", ");
+
+                } else if (slot.getBookStatus().equalsIgnoreCase(BOOKED) &&
+                        slot.getStudentId() == studentId) {
+                    outputBld = new StringBuilder();
+                    String appendedStr = "BOOKED\n(" + slot.getProfAlias().toUpperCase() + ")  ";
+                    outputBld.append(appendedStr);
+
+                } else if (slot.getBookStatus().equalsIgnoreCase(PENDING)
+                        && slot.getStudentId() == studentId) {
+                    outputBld = new StringBuilder();
+                    String appendedStr = "PENDING\n(" + slot.getProfAlias().toUpperCase() + ")  ";
+                    outputBld.append(appendedStr);
+                }
             }
         }
 
@@ -92,7 +111,6 @@ public class WeekCalendarServiceImpl implements WeekCalendarService {
         int len = output.length();
 
         if (len == 0) return "";
-
         return output.substring(0, len - 2);
     }
 
@@ -132,10 +150,12 @@ public class WeekCalendarServiceImpl implements WeekCalendarService {
         for (BookingSlot slot : slotList) {
             if (slot.getDateTime().equals(dateTime)) {
                 String appendedStr = "";
-                if (slot.getBookStatus().equals(AVAIL))
+                if (slot.getBookStatus().equalsIgnoreCase(AVAIL))
                     appendedStr = slot.getProfAlias().toUpperCase();
-                else if (slot.getBookStatus().equals(BOOKED) && slot.getStudentId() == studentId)
-                    appendedStr = "BOOKED WITH " + slot.getProfAlias();
+                else if (slot.getBookStatus().equalsIgnoreCase(BOOKED) && slot.getStudentId() == studentId)
+                    appendedStr = "BOOKED\n(" + slot.getProfAlias().toUpperCase() + ")";
+                else if (slot.getBookStatus().equalsIgnoreCase(PENDING) && slot.getStudentId() == studentId)
+                    appendedStr = "PENDING\n(" + slot.getProfAlias().toUpperCase() + ")";
 
                 outputBld.append(appendedStr);
             }

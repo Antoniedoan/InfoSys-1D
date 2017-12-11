@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-import static profchoper._misc.Constant.*;
+import static profchoper._config.Constant.*;
 
 public class BookingSlot {
     private Timestamp timestamp;
@@ -47,7 +47,7 @@ public class BookingSlot {
 
     @Override
     public String toString() {
-        return getDayWeekYear(getDate()) + " : " + getStartTime() + " to " + getEndTime()
+        return getDayWeekYear(getDate()) + " - " + getStartTime() + " to " + getEndTime()
                 + " with Prof. " + getProfAlias().toUpperCase();
     }
 

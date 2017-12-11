@@ -1,14 +1,14 @@
-package profchoper._misc;
+package profchoper._controllers;
 
-public class StudentCalendarResponse {
+public class CalendarResponse {
     private String status;
     private Object data;
 
-    public StudentCalendarResponse() {
+    public CalendarResponse() {
 
     }
 
-    public StudentCalendarResponse(String status, Object data) {
+    public CalendarResponse(String status, Object data) {
         this.status = status;
         this.data = data;
     }

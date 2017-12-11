@@ -22,9 +22,8 @@
         <div class="navbar-header">
             <p class="navbar-brand h4">ProfChoper</p></div>
         <div>
-
-            <button class="btn btn-danger logout"><a th:href="@{/logout}"> Log out</a></button>
-            <h5 class="profName" th:text="${profName.toString()}"> Prof Name</h5>
+            <a class="btn btn-danger logout" th:href="@{/logout}">Logout</a>
+            <h5 class="profName" th:text="${profName.toString()}">Prof Name</h5>
         </div>
 
 
@@ -41,9 +40,8 @@
     <p class="notitext-container">
         <span class="notistatus">Pending</span>
         <span class="notitext">04/12 : 15:30 to 16:00 with prof. Oka Kurniawan</span>
-        <a class="notibtnbook btn btn-success" href="#calendar">Confirm</a>
         <a class="notibtn btn btn-danger">Reject</a>
-
+        <a class="notibtnbook btn btn-success" href="#calendar">Confirm</a>
     </p>
 </div>
 
@@ -55,48 +53,55 @@
         <span class="notitext">04/12 : 15:30 to 16:00 with prof. Oka Kurniawan</span>
 
     </p>
-
-    <!--if got msg-->
-    <hr>
-    <p id="notimsg" class="notimsg">Note: please bring along your stuff please bring along your stuffp</p>
 </div>
 
-<div class="page-header" id="calendar">
+
+<!-- CALENDAR -->
+<div class="page-header noselect" id="calendar-header">
     <h1>Your calendar</h1>
 </div>
-<div class="week">
-    <ul>
-        <li class="prev">&#10094;</li>
-        <li class="next">&#10095;</li>
-        <li>
-            4 Sept - 8 Sept 2017<br>
-            <span style="font-size:18px">Week 12</span>
-        </li>
-    </ul>
-</div>
-<table id="week-cal-table">
-    <tr>
-        <th>Time</th>
-        <th scope="col">Monday</th>
-        <th scope="col">Tuesday</th>
-        <th scope="col">Wednesday</th>
-        <th scope="col">Thursday</th>
-        <th scope="col">Friday</th>
-    </tr>
 
-    <tr id="week-cal-row" th:each="row : ${calendar.getMatrix()}">
-        <th th:text="${row[0]}"></th>
-        <!-- th:utext does not escape <br /> -->
+<div class="noselect" id="calendar">
+    <div class="week-cal" id="week-cal-header">
+        <ul id="week-cal-header-container">
+            <li class="prev">&#10094;</li>
+            <li class="next">&#10095;</li>
+            <li class="week-cal-header-text">
+                <span id="week-cal-header-date"
+                      th:text="${calendar.getHeaderDate()}">Test Date - Date 20XX</span><br>
+                <span style="font-size:18px" id="week-cal-header-week"
+                      th:text="${calendar.getHeaderWeek()}">Week Test</span>
+            </li>
+        </ul>
+    </div>
+
+    <table class="week-cal" id="week-cal-table">
+        <tr>
+            <th>Time</th>
+            <th scope="col">Monday</th>
+            <th scope="col">Tuesday</th>
+            <th scope="col">Wednesday</th>
+            <th scope="col">Thursday</th>
+            <th scope="col">Friday</th>
+        </tr>
+
         <!-- replace \n from backend to <br /> for html frontend -->
-        <td th:utext="${#strings.replace(#strings.escapeXml(row[1]),'&#10;','&lt;br /&gt;')}"></td>
-        <td th:utext="${#strings.replace(#strings.escapeXml(row[2]),'&#10;','&lt;br /&gt;')}"></td>
-        <td th:utext="${#strings.replace(#strings.escapeXml(row[3]),'&#10;','&lt;br /&gt;')}"></td>
-        <td th:utext="${#strings.replace(#strings.escapeXml(row[4]),'&#10;','&lt;br /&gt;')}"></td>
-        <td th:utext="${#strings.replace(#strings.escapeXml(row[5]),'&#10;','&lt;br /&gt;')}"></td>
-    </tr>
-
-</table>
-
+        <!-- th:utext does not escape <br /> -->
+        <tr class="week-cal-row" th:each="row, itrStat : ${calendar.getMatrix()}">
+            <th th:id="time + ${itrStat.index}" th:text="${row[0]}"></th>
+            <td th:id="${itrStat.index} + x0"
+                th:utext="${#strings.replace(#strings.escapeXml(row[1]),'&#10;','&lt;br /&gt;')}"></td>
+            <td th:id="${itrStat.index} + x1"
+                th:utext="${#strings.replace(#strings.escapeXml(row[2]),'&#10;','&lt;br /&gt;')}"></td>
+            <td th:id="${itrStat.index} + x2"
+                th:utext="${#strings.replace(#strings.escapeXml(row[3]),'&#10;','&lt;br /&gt;')}"></td>
+            <td th:id="${itrStat.index} + x3"
+                th:utext="${#strings.replace(#strings.escapeXml(row[4]),'&#10;','&lt;br /&gt;')}"></td>
+            <td th:id="${itrStat.index} + x4"
+                th:utext="${#strings.replace(#strings.escapeXml(row[5]),'&#10;','&lt;br /&gt;')}"></td>
+        </tr>
+    </table>
+</div>
 
 </body>
 </html>

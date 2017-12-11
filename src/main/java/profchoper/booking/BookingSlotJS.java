@@ -1,12 +1,8 @@
 package profchoper.booking;
 
 
-import javax.validation.constraints.NotNull;
-
 public class BookingSlotJS {
-    @NotNull
     private String profAlias;
-
     private String time;
 
     public BookingSlotJS() {

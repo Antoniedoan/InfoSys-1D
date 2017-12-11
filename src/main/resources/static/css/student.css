@@ -47,14 +47,23 @@ ul {
     font-size: 22px;
 }
 
-
-
-.btn-lg:hover {
-    color: #1e70ff;
+.btn-lg {
+    color: lightskyblue;
+    background: white;
+    margin: 15px auto 0 30px;
 }
 
 .btn-lg:focus {
     color: dodgerblue;
+}
+
+.studentID {
+    font-size: 20px;
+    position: absolute;
+    right: 130px;
+    color: lightblue;
+    margin-top: 28px;
+    overflow: hidden;
 }
 
 .logout {
@@ -109,7 +118,6 @@ ul {
     position: absolute;
     color: white;
 }
-
 
 #week-cal-header .prev:hover, #week-cal-header .next:hover {
     margin-left: -10px;
@@ -238,28 +246,33 @@ th {
 }
 
 .page-header {
-    margin: 7% 3% 2% 3%;
+    margin: 140px 20px 10px 20px;
 }
 
 .page-header h1 {
     font-size: 40px;
 }
 
-/* Noticonfirm and Notipending hover */
+/* Noticonfirm, pending and cancel hover */
 .noticonfirm:hover .notibtn, .notipending:hover .notibtn {
     display: inline-block;
     overflow: auto;
 }
 
-.noticonfirm:hover span, .notipending:hover span {
+.noticonfirm:hover .notibtnbook {
+    display: inline-block;
+    overflow: auto;
+}
+
+.noticonfirm:hover span, .notipending:hover span, .noticancel:hover span {
     display: inline-block;
 }
 
-.noticonfirm:hover hr, .notipending:hover hr {
+.noticonfirm:hover hr, .notipending:hover hr, .noticancel:hover hr {
     display: block;
 }
 
-.noticonfirm:hover .notimsg, .notipending:hover .notimsg {
+.noticonfirm:hover .notimsg, .notipending:hover .notimsg, .noticancel:hover .notimsg {
     display: block;
 }
 
@@ -277,8 +290,61 @@ th {
 .noticonfirm:hover {
     background: #26d055;
     color: white;
-    font-size: 1.3em;
+    font-size: 22px;
     text-align: center;
+}
+
+.noticonfirm:hover .notitext {
+    margin-left: 45px;
+}
+
+/* Pending */
+.notipending {
+    width: 90%;
+    height: 8%;
+    margin: 10px 6% 10px 4%;
+    background-color: white;
+    border: 2px solid #4286f4;
+    padding: .5% 1.5%;
+    text-align: center;
+}
+
+.notipending:hover {
+    background: #4286f4;
+    color: white;
+    font-size: 22px;
+    text-align: center;
+}
+
+.notipending:hover .notitext {
+    margin-left: 65px;
+}
+
+/* Cancelled */
+.noticancel {
+    width: 90%;
+    height: 8%;
+    margin: 10px 6% 10px 4%;
+    background-color: white;
+    border: 2px solid #ed3b3b;
+    padding: .5% 1.5%;
+    text-align: center;
+}
+
+.noticancel:hover {
+    background: #ed3b3b;
+    color: white;
+    font-size: 22px;
+    text-align: center;
+}
+
+.noticancel:hover .notitext {
+    margin-left: 70px;
+}
+
+.noticancel:hover .notibtnbook {
+    display: inline-block;
+    overflow: auto;
 }
 
 /* General notification */
@@ -326,7 +392,7 @@ hr {
 }
 
 /* No appointment text */
-#nonoti{
+#nonoti {
     text-align: center;
     color: #a3a3a3;
 }
@@ -340,184 +406,6 @@ hr {
     user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
-.page-header{
-            margin: 100px 20px 10px 20px;
-        }
-
-
- #calendar{
-        margin-bottom: 30px;
-    }
-        /*nav bav props*/
-
-.btn-lg {
-
-    color: lightskyblue;
-    background: white;
-    margin: 15px auto 0 30px;
-}
-
-        .course{
-            margin-left: 10%;
-
-        }
-        .instructor{
-            margin-left: 2%;
-
-        }
-
-        .h4{
-            padding-left:55px;
-            font-size: 3.5rem;
-        }
-        .btn{
-            margin-top: 12.5px;
-        }
-        .studenID{
-            float: right;
-            color: green;
-            margin-left: 95px;
-            overflow: auto;
-        }
-        /* successful appointment */
-
-        .noticonfirm {
-            width:90%;
-            height: 63px;
-            margin-left: 50px;
-            margin-right: 50px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            background-color: white;
-            border: 2px solid green;
-            padding-left: 20px;
-            padding-right: 6px;
-            padding-bottom: 4px;
-            text-align: center;
-        }
-
-        .noticonfirm:hover{
-            background: green;
-            color:white;
-
-        }
-        .noticonfirm:hover button{
-            display:inline-block;
-            overflow: auto;
-
-        }
-        .noticonfirm:hover span{
-            display: inline-block;
-        }
-
-        .noticonfirm:hover{
-            font-size: 1.3em;
-
-        }
-        /* pending */
-        .notipending {
-            width:90%;
-            height: 63px;
-            margin-left: 50px;
-            margin-right: 50px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            background-color: white;
-            border: 2px solid #4286f4;
-            padding-left: 20px;
-            padding-right: 6px;
-            padding-bottom: 4px;
-            text-align: center;
-        }
-
-        .notipending:hover{
-            background: #4286f4;
-            color:white;
-
-        }
-        .notipending:hover button{
-            display:inline-block;
-            overflow: auto;
-
-        }
-        .notipending:hover span{
-            display: inline-block;
-        }
-
-        .notipending:hover{
-            font-size: 1.3em;
-
-        }
-        /* cancel */
-        .noticancel {
-            width:90%;
-            height: 63px;
-            margin-left: 50px;
-            margin-right: 50px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            background-color: white;
-            border: 2px solid #ed3b3b;
-            padding-left: 20px;
-            padding-right: 6px;
-            padding-bottom: 4px;
-            text-align: center;
-        }
-
-        .noticancel:hover{
-            background: #ed3b3b;
-            color:white;
-
-        }
-        .noticancel:hover button{
-            display:inline-block;
-            overflow: auto;
-
-        }
-        .noticancel:hover span{
-            display: inline-block;
-        }
-
-        .noticancel:hover{
-            font-size: 1.3em;
-
-        }
-
-        .notibtnbook{
-            display:none;
-            float:right;
-            overflow: auto;
-            margin: 0;
-            padding-top: 3px;
-            padding-bottom: 5px;
-            padding-right: 10px;
-            padding-left: 10px;
-            margin-bottom: 3px;
-        }
-
-        /* general noti */
-        .notistatus{
-            display: none;
-            float: left;
-        }
-
-        .notitext{
-            align-self: left;
-            padding-top: 15px;
-            font-size: 1.2em;
-            vertical-align: middle;
-        }
-        .notibtn{
-            display:none;
-            float:right;
-            overflow: auto;
-            margin: 0;
-            padding-top: 3px;
-            padding-bottom: 5px;
-            padding-right: 5px;
-            padding-left: 5px;
-            margin-bottom: 3px;
-        }
 /* Snackbar */
 #snackbar {
     visibility: hidden;
@@ -542,21 +430,45 @@ hr {
 }
 
 @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @-webkit-keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }
 
 @keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }

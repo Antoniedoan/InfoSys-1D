@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static profchoper._misc.Constant.STUDENT_EMAIL_DOMAIN;
+import static profchoper._config.Constant.STUDENT_EMAIL_DOMAIN;
 
 @RestController
 public class StudentRestController {

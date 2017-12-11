@@ -2,17 +2,18 @@ $(document).ready(function () {
     smoothScrollTo();
 
     // INSERT MODAL HERE
-    var calendar = $(".calendar");
-    calendar.on("click", "table td", function () {
-        $("#myModal").modal();
-    });
-
+    var calendar = $("#calendar");
 
     // Hover on table cell changes its color and background if there's text in it
     calendar.on("mouseover", "table td", function () {
         var cell = $(this);
-        if (cell.text() !== "") {
-            cell.css({cursor: 'pointer', background: 'green', color: 'white'});
+        var text = cell.text().toUpperCase();
+        if (text.indexOf("AVAILABLE") >= 0 || text.indexOf("BOOKED") >= 0) {
+            cell.css({cursor: 'pointer', background: '#ed3b3b', color: 'white'});
+        } else if (text.indexOf("PENDING") >= 0) {
+            cell.css({cursor: 'pointer', background: '#4286f4', color: 'white'});
+        } else if (text !== "") {
+            cell.css({cursor: 'pointer', background: '#26d055', color: 'white'});
         }
     });
 

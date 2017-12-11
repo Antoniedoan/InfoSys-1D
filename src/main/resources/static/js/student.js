@@ -34,10 +34,10 @@ $(document).ready(function () {
     calendar.on("mouseover", "table td", function () {
         var cell = $(this);
         var text = cell.text().toUpperCase();
-        if (text !== "" && (text.indexOf("PENDING") >= 0 || text.indexOf("BOOKED") >= 0)) {
-            cell.css({cursor: 'pointer', background: 'red', color: 'white'});
+        if (text.indexOf("PENDING") >= 0 || text.indexOf("BOOKED") >= 0) {
+            cell.css({cursor: 'pointer', background: '#ed3b3b', color: 'white'});
         } else if (text !== "") {
-            cell.css({cursor: 'pointer', background: 'green', color: 'white'});
+            cell.css({cursor: 'pointer', background: '#26d055', color: 'white'});
         }
     });
 

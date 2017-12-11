@@ -88,11 +88,7 @@ public class WeekCalendarServiceImpl implements WeekCalendarService {
 
         for (BookingSlot slot : slotList) {
             if (slot.getDateTime().equals(dateTime)) {
-                if (slot.getBookStatus().equalsIgnoreCase(AVAIL)) {
-                    outputBld.append(slot.getProfAlias().toUpperCase());
-                    outputBld.append(", ");
-
-                } else if (slot.getBookStatus().equalsIgnoreCase(BOOKED) &&
+                if (slot.getBookStatus().equalsIgnoreCase(BOOKED) &&
                         slot.getStudentId() == studentId) {
                     outputBld = new StringBuilder();
                     String appendedStr = "BOOKED\n(" + slot.getProfAlias().toUpperCase() + ")  ";
@@ -103,6 +99,9 @@ public class WeekCalendarServiceImpl implements WeekCalendarService {
                     outputBld = new StringBuilder();
                     String appendedStr = "PENDING\n(" + slot.getProfAlias().toUpperCase() + ")  ";
                     outputBld.append(appendedStr);
+                } else {
+                    outputBld.append(slot.getProfAlias().toUpperCase());
+                    outputBld.append(", ");
                 }
             }
         }

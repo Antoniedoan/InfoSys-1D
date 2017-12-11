@@ -72,7 +72,8 @@ function tableCellOnClick() {
         var profAlias = text.split("(")[1].split(")")[0];
         var inputText = date + " - " + time + " with Prof. " + profAlias;
         var textColor = (text.indexOf("BOOKED") >= 0) ? "green" : "blue";
-        cancelModalPopup(inputText, textColor, $(this));
+        console.log($(this));
+        cancelModalPopup(inputText, textColor);
 
     } else if (text !== "") {
         var textArr = ($(this).text().split(', '));
@@ -113,7 +114,7 @@ function tableCellOnClick() {
 
 function bookModalBtnOnClick() {
     var profBtn = $("input:radio[name='profBtn']");
-    var time = $("#book-date").text().split(" to ")[0];
+    var dateTime = $("#book-date").text().split(" to ")[0];
 
     var profAlias;
     var bookSlot;
@@ -121,22 +122,22 @@ function bookModalBtnOnClick() {
     if (profBtn.is(":checked")) {
         profAlias = $("input:radio[name='profBtn']:checked").val();
         console.log("profbtn");
-        console.log(time + ", " + profAlias);
+        console.log(dateTime + ", " + profAlias);
 
         bookSlot = {
             profAlias: profAlias,
-            time: time
+            time: dateTime
         };
 
         return ajaxBook(bookSlot, "null");
 
     } else if (!profBtn.length) {
         profAlias = $("#radio-home").find("span").attr('id');
-        console.log(time + ", " + profAlias);
+        console.log(dateTime + ", " + profAlias);
 
         bookSlot = {
             profAlias: profAlias,
-            time: time
+            time: dateTime
         };
 
         var chooseProfAlias = ($("#prof-choice-text").text() === "Choose Prof") ? "null" : profAlias;
@@ -168,7 +169,8 @@ function ajaxBook(bookSlot, chooseProfAlias) {
                 showSnackbar("Request sent.<br/>Awaiting prof. response.");
 
             } else {
-                showSnackbar("Request not processed. Someone might have booked it.<br/>" +
+                showSnackbar("ERROR: Request not processed.<br/>" +
+                    "Someone might have booked it.<br/>" +
                     "Please try again.")
             }
 
@@ -211,42 +213,56 @@ function cancelModalPopup(inputText, textColor, caller) {
     var cancelModalText = $("#cancel-modal-text");
     cancelModalText.empty().append(inputText);
     cancelModalText.css({color: textColor});
-    $("#cancel-modal").modal('toggle', caller);
+    $("#cancel-modal").modal('toggle');
 }
 
 
 // Confirm cancel slot booking in modal
-function cancelModalBtnOnClick(event) {
-    var caller = event.data.caller;
+function cancelModalBtnOnClick() {
+    var text = $(this).parent().parent().find($("#cancel-modal-text")).text();
+    var profAlias = text.split(". ")[1].toLowerCase();
+    var dateTime = text.split(" to ")[0];
+    console.log(dateTime + ", " + profAlias);
 
-    if (caller.hasClass('notibtn')) {
-        var text = caller.parent().find($(".notitext")).text();
-        var profAlias = text.split(". ")[1].toLowerCase();
-        var time = text.split(" to ")[0];
+    var bookSlot = {
+        profAlias: profAlias,
+        time: dateTime
+    };
 
-        console.log(time);
-
-        var bookSlot = {
-            profAlias: profAlias,
-            time: time
-        };
-
-        ajaxCancel(bookSlot);
-    }
+    var chooseProfAlias = ($("#prof-choice-text").text() === "Choose Prof") ? "null" : profAlias;
+    ajaxCancel(bookSlot, chooseProfAlias);
 }
 
 // Send ajax request to cancel slot
-function ajaxCancel(bookSlot) {
+function ajaxCancel(bookSlot, chooseProfAlias) {
+    var headerDate = $("#week-cal-header-date").text();
+    var appendedDate = headerDate.substr(0, 11).replace(/ /g, "-");
+    var courseString = $("#course-choice-text").text();
+    var courseId = courseString.substr(0, 2) + courseString.substr(3, 3);
+
     $.ajax({
         url: "/student?action=cancel",
         contentType: "application/json",
         type: "PUT",
         data: JSON.stringify(bookSlot),
         success: function (result) {
-            console.log(result.status);
+            if (result.status === "CANCEL_DONE") {
+                showSnackbar("Slot cancelled.");
 
-            showSnackbar("YEE");
-            console.log("DONE")
+            } else {
+                showSnackbar("ERROR: Slot is not cancelled.<br/>" +
+                    "Please try again.")
+            }
+
+            const studentCalUrl = "/student/calendar?date=" + appendedDate
+                + "&course=" + courseId + "&prof=" + chooseProfAlias;
+            $("#week-cal-table").load(studentCalUrl);
+
+            const studentNotiUrl = "/student/noti?date=" + appendedDate;
+            $("#notifications").load(studentNotiUrl);
+
+            console.log(result.status);
+            return result.data;
         },
         error: function (e) {
             console.log("ERROR: " + e)

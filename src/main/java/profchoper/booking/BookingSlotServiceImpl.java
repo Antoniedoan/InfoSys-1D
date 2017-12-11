@@ -45,7 +45,8 @@ public class BookingSlotServiceImpl implements BookingSlotService {
         if (!user.getRole().equalsIgnoreCase(ROLE_STUDENT)) return null;
 
         Student student = studentService.getStudentByEmail(studentEmail);
-        if (!slot.getBookStatus().equalsIgnoreCase(AVAIL)) return null;
+        if (slot.getBookStatus().equalsIgnoreCase(BOOKED)
+                || slot.getBookStatus().equalsIgnoreCase(PENDING)) return null;
 
         slot.setBookStatus(PENDING);
         slot.setStudentId(student.getId());

@@ -27,10 +27,9 @@ $(document).ready(function () {
 
     // Listener to get caller that invoker book modal
     var bookModal = $("#book-modal");
-    bookModal.on('show.bs.modal', function (event) {
-        var caller = event.relatedTarget;
-        var bookModalFooter = cancelModal.find(".modal-footer");
-        bookModalFooter.on("click", "#book", {caller: caller}, bookModalBtnOnClick);
+    bookModal.on('show.bs.modal', function () {
+        var bookModalFooter = bookModal.find(".modal-footer");
+        bookModalFooter.on("click", "#book", bookModalBtnOnClick);
     });
 
     // Hover on table cell changes its color and background if there's text in it
@@ -58,27 +57,43 @@ $(document).ready(function () {
 
 // When a table cell is clicked, modal shows up if there's text
 function tableCellOnClick() {
-    var textArr = ($(this).html().split(', '));
-    var radioHome = $("#radio-home");
-    $(radioHome).empty();
-    for (var i = 0; i < textArr.length; i++) {
-        const profApi = "/api/professors/" + textArr[i].toLowerCase();
-        $.getJSON(profApi, function (json) {
-            if (json.name !== 0) {
-                var fullName = json.name;
-                var profRadioBtn = makeRadioButton("profbutton", fullName, fullName);
-                radioHome.append(profRadioBtn);
-                radioHome.append("<br/>");
-            } else {
-                console.log("ERROR: Can't get prof alias.")
-            }
-        });
-    }
-
-    // Show modal if it has text
     if ($(this).text() !== "") {
-        $("#myModal").modal('toggle', $(this));
+        var cellId = $(this).attr('id');
+        var row = parseInt(cellId.split("x")[0]);
+        var col = parseInt(cellId.split("x")[1]);
+        var weekCalHeaderDate = $("#week-cal-header-date");
+        var startDate = weekCalHeaderDate.text().substr(0, 11).replace(/ /g, "-");
+
+        var date = modalDateFormat(startDate, col);
+        var time = $("#time" + row).text();
+
+        var textArr = ($(this).html().split(', '));
+        var radioHome = $("#radio-home");
+        $(radioHome).empty();
+        for (var i = 0; i < textArr.length; i++) {
+            const profApi = "/api/professors/" + textArr[i].toLowerCase();
+            $.getJSON(profApi, function (json) {
+                if (json.name !== 0) {
+                    var fullName = json.name;
+                    var profRadioBtn = makeRadioButton("profbutton", fullName, fullName);
+                    radioHome.append(profRadioBtn);
+                    radioHome.append("<br/>");
+                } else {
+                    console.log("ERROR: Can't get prof alias.")
+                }
+            });
+        }
+
+        var bookModal = $("#book-modal");
+        bookModal.find("#book-date").empty().append(date + " " + time);
+        bookModal.modal();
     }
+}
+
+
+function bookModalBtnOnClick() {
+    var i = $(this).parent().caller;
+    console.log(i);
 }
 
 
@@ -94,11 +109,6 @@ function makeRadioButton(name, value, text) {
     label.append(" " + text);
 
     return label;
-}
-
-
-function bookModalBtnOnClick(event) {
-    var caller = event.data.caller;
 }
 
 
@@ -233,13 +243,13 @@ function btnOnClick() {
     // If next, increment date and week, else decrement
     // Check for term dates as well
     if ($(this).is(".next")) {
-        newStartDate = dateFormat(startDate, 7);
-        newEndDate = dateFormat(endDate, 7);
+        newStartDate = headerDateFormat(startDate, 7);
+        newEndDate = headerDateFormat(endDate, 7);
         newWeek = checkTermDate(weekCalHeaderWeek.text(), newStartDate, 1);
 
     } else if ($(this).is(".prev")) {
-        newStartDate = dateFormat(startDate, -7);
-        newEndDate = dateFormat(endDate, -7);
+        newStartDate = headerDateFormat(startDate, -7);
+        newEndDate = headerDateFormat(endDate, -7);
         newWeek = checkTermDate(weekCalHeaderWeek.text(), newStartDate, -1);
 
     } else {
@@ -310,8 +320,8 @@ function checkTermDate(week, date, oneOrNegOne) {
 
 
 // Format the date so that its dd-MMM-yyyy
-function dateFormat(date, days) {
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function headerDateFormat(date, days) {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     var dateObj = new Date(date);
     dateObj.setDate(dateObj.getDate() + days);
@@ -321,6 +331,17 @@ function dateFormat(date, days) {
     var newYear = dateObj.getFullYear().toString();
 
     return (newDate[1] ? newDate : "0" + newDate[0]) + " " + newMonth + " " + newYear;
+}
+
+function modalDateFormat(date, days) {
+    var dateObj = new Date(date);
+    dateObj.setDate(dateObj.getDate() + days);
+
+    var newDate = dateObj.getDate().toString();
+    var newMonth = (dateObj.getMonth() + 1).toString();
+    var newYear = dateObj.getFullYear().toString().substr(2, 2);
+
+    return (newDate[1] ? newDate : "0" + newDate[0]) + "/" + newMonth + "/" + newYear;
 }
 
 

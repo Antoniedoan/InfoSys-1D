@@ -20,7 +20,7 @@ public class WeekCalendar {
     }
 
     public String getHeaderDate() {
-        LocalDate endDateOfSchoolWeek = startDateOfSchoolWeek.plus(5, ChronoUnit.DAYS);
+        LocalDate endDateOfSchoolWeek = startDateOfSchoolWeek.plus(4, ChronoUnit.DAYS);
 
         return DAY_MONTH.format(startDateOfSchoolWeek) + " - " + DAY_MONTH.format(endDateOfSchoolWeek);
     }
